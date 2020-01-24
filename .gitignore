@@ -1,0 +1,8 @@
+*.iws
+.ideaDataSources
+api/dist
+api/node_modules
+data
+httpRequests
+client/build
+client/node_modules

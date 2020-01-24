@@ -1,0 +1,53 @@
+GET http://localhost:5000/periods
+
+###
+POST http://localhost:5000/generate/2018-2
+Accept: */*
+Cache-Control: no-cache
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="contract"; filename="contract.xml"
+Content-Type: application/xml
+
+< /Users/ngrebenshikov/repositories/my/office/data/tests/test.xml
+--WebAppBoundary--
+
+###
+
+POST http://localhost:5000/auth/login
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+
+email=grebenshikov.n@gmail.com&password=qwerty
+
+###
+
+POST http://localhost:5000/auth/create
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+
+email=1&password=1
+
+###
+
+POST http://localhost:5000/auth/login
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+
+email=grebenshikov@gmail.com&password=qwe
+
+> {% client.global.set("auth_token", response.body.user.token); client.log(response.body.user.token); %}
+
+### Authorization by token, part 2. Use token to authorize.
+GET http://localhost:5000/auth/current
+Authorization: Token {{auth_token}}
+
+###
+GET http://localhost:5000/contracts/byPeriodWithUsers/2
+Authorization: Token {{auth_token}}
+
+###
