@@ -5,7 +5,7 @@ import OfficeData from "../OfficeData"
 import multer = require('multer')
 import fs = require("fs")
 import archiver = require("archiver")
-import { DOMParserImpl as dom } from 'xmldom-ts';
+import { DOMParser as dom } from 'xmldom';
 import * as xpath from 'xpath-ts';
 import streamBuffers = require('stream-buffers');
 
