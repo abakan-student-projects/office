@@ -5,7 +5,7 @@ import OfficeData from "../OfficeData"
 import path = require('path')
 
 class DownloadController implements IControllerBase {
-    public path = process.env.PATH_PREFIX + '/download/:workspace/:type'
+    public path = process.env.PATH_PREFIX + '/download/:workspace/contract.:type'
     public router = express.Router()
 
     constructor() {

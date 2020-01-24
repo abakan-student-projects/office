@@ -4,7 +4,7 @@ import AuthService from "./services/AuthService";
 
 export class ProtectedRoute extends Route<RouteProps> {
     public render() {
-        if (!AuthService.isAuthenticated) {
+        if (!AuthService.isAuthenticated()) {
             const renderComponent = () => (<Redirect to={{pathname: "/login"}}/>);
             return <Route {...this.props} component={renderComponent} render={undefined}/>;
         } else {

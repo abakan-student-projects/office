@@ -92,8 +92,8 @@ const Contract: React.FC<ContractProps> = (props) => {
                     }).format(Date.now())}</div>,
                     <div>Output:</div>, <div>{response.output}</div>
                 ]
-                setPdfUrl((response.output.indexOf("Error") < 0) ? process.env.REACT_APP_API_ENDPOINT + "/download/" + response.workspace + "/pdf" : "")
-                setDocxUrl((response.output.indexOf("Error") < 0 && response.hasDocx) ? process.env.REACT_APP_API_ENDPOINT + "/download/" + response.workspace + "/docx" : "")
+                setPdfUrl((response.output.indexOf("Error") < 0) ? process.env.REACT_APP_API_ENDPOINT + "/download/" + response.workspace + "/contract.pdf" : "")
+                setDocxUrl((response.output.indexOf("Error") < 0 && response.hasDocx) ? process.env.REACT_APP_API_ENDPOINT + "/download/" + response.workspace + "/contract.docx" : "")
                 setIsGenerating(false)
                 setLog([...lines, ...log])
             })

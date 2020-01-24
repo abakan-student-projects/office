@@ -78,6 +78,9 @@ const Contractor: React.FC = () => {
                     {periods?.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
                 {contractsSelect}
+                {(auth.isAdmin) ? <a
+                    className={"uk-margin-left uk-margin-top uk-margin-bottom uk-button uk-button-default"}
+                    href={process.env.REACT_APP_API_ENDPOINT + "/generateAllContractsByPeriod/" + selectedPeriod}>Download all</a> : null}
                 {(auth.isAdmin) ? <Link className={"uk-margin-left uk-margin-top uk-margin-bottom uk-button uk-button-default"} to={"/"}>Back to Contractor</Link> : null}
             </div>
 

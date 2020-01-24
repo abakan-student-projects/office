@@ -5,6 +5,10 @@ import OfficeData from "../OfficeData"
 import multer = require('multer')
 import fs = require("fs")
 import archiver = require("archiver")
+import { DOMParserImpl as dom } from 'xmldom-ts';
+import * as xpath from 'xpath-ts';
+import streamBuffers = require('stream-buffers');
+
 import GenerationDocumentType from "../GenerationDocumentType";
 import OfficeTools from "../OfficeTools";
 import GeneratorResponse from "../../../shared/GeneratorResponse"
@@ -23,6 +27,74 @@ class GeneratorController implements IControllerBase {
 
     public initRoutes() {
         this.router.post(process.env.PATH_PREFIX + '/generate/:period/:userId', auth.required, upload.none(), this.post)
+        this.router.get(process.env.PATH_PREFIX + '/generateAllContractsByPeriod/:period', auth.required, this.getAllContractsByPeriod)
+    }
+
+    getAllContractsByPeriod = (req: Request, res: Response) => {
+        let user = (req as any).payload;
+        if (!user.isAdmin) {
+            res.sendStatus(401)
+            return
+        }
+        Period.findByPk(req.params.period)
+            .then(period => {
+                Contract.findAllLatestByPeriod(parseInt(req.params.period))
+                    .then(contracts =>  {
+                        const workspacePaths = Promise.all(
+                            contracts.map(
+                                contract => new Promise((resolve, reject) => {
+                                    const [ workspace, workspacePath ] = OfficeData.createWorkspace(period.path, (err) => {
+                                        if (err) {
+                                            resolve(null)
+                                        } else {
+                                            fs.writeFileSync(workspacePath + "/output/contract.xml", contract.xml);
+                                            this.generate(workspacePath)
+                                                .then((output) => {
+                                                    resolve(workspacePath)
+                                                })
+                                                .catch(e => { resolve(null)})
+                                        }
+                                    })
+                        })))
+                        workspacePaths.then(paths => {
+                            const archiveStream = new streamBuffers.WritableStreamBuffer({
+                                initialSize: (100 * 1024),   // start at 100 kilobytes.
+                                incrementAmount: (10 * 1024) // grow by 10 kilobytes each time buffer overflows.
+                            })
+                            const archive = archiver("zip")
+                            archive.pipe(archiveStream)
+                            paths.forEach(p => {
+                                if (fs.existsSync(p + "/output/contract.pdf")) {
+                                    const doc = new dom().parseFromString(fs.readFileSync(p + "/output/contract.xml").toString())
+                                    const name = xpath.select("/contract/identification/title", doc)[0].firstChild.data
+                                    archive.append(
+                                        fs.createReadStream(p + "/output/contract.docx"),
+                                        {name: name + " " + period.name + ".docx"});
+                                }
+                            })
+                            archive.finalize()
+                                .then(() => {
+                                    archiveStream.end(() => {
+                                        const buffer = archiveStream.getContents()
+                                        if (buffer) {
+                                            res.writeHead(200, {
+                                                'Content-Type': "application/zip",
+                                                'Content-disposition': 'attachment;filename=contracts.zip',
+                                                'Content-Length': buffer.length
+                                            })
+                                            res.end(buffer, "binary")
+                                        }
+                                    })
+                                })
+                        })
+                    })
+                    .catch(e => {
+                        res.sendStatus(500)
+                    })
+            })
+            .catch(e => {
+                res.sendStatus(500)
+            })
     }
 
     post = (req: Request, res: Response, next: NextFunction) => {

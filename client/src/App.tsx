@@ -50,12 +50,19 @@ const App: React.FC = () => {
             })
     }
 
-    const [auth, setAuth] = useState({
-        isAuthenticated: false,
+    const [auth, setAuth] = useState<{
+        isAuthenticated: boolean,
+        isAuthenticating: boolean,
+        isAdmin: boolean,
+        token: string|undefined,
+        userId: number|undefined,
+        requestAuth: (email: string, password: string, action: string) => Promise<any>
+    }>({
+        isAuthenticated: AuthService.isAuthenticated(),
         isAuthenticating: false,
-        isAdmin: false,
-        token: undefined,
-        userId: undefined,
+        isAdmin: AuthService.isAdmin,
+        token: AuthService.token,
+        userId: AuthService.userId,
         requestAuth: requestAuth
     })
 
