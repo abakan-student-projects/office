@@ -7,7 +7,7 @@ import User from "../models/User";
 
 
 class ContractsController implements IControllerBase {
-    public path = '/contracts'
+    public path = process.env.PATH_PREFIX + '/contracts'
     public router = express.Router()
 
     constructor() {

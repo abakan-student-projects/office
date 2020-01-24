@@ -41,7 +41,6 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/client" vcs="Git" />
   </component>
   <component name="dataSourceStorageLocal">
     <data-source name="SQLite - db.sqlite3" uuid="01ef9df9-4fff-4254-aa13-55c22765c5b4">

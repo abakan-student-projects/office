@@ -13,7 +13,7 @@ class AuthController implements IControllerBase {
     }
 
     public initRoutes() {
-        this.router.post("/auth/create", auth.optional, (req: Request, res: Response, next: NextFunction) => {
+        this.router.post(process.env.PATH_PREFIX + "/auth/create", auth.optional, (req: Request, res: Response, next: NextFunction) => {
 
             if(!req.body.email) {
                 return res.status(422).json({
@@ -38,7 +38,7 @@ class AuthController implements IControllerBase {
                 .then(() => res.json({ user: finalUser.toAuthJSON() }));
         })
 
-        this.router.post("/auth/login", auth.optional, (req: Request, res: Response, next: NextFunction) => {
+        this.router.post(process.env.PATH_PREFIX + "/auth/login", auth.optional, (req: Request, res: Response, next: NextFunction) => {
             if(!req.body.email) {
                 return res.status(422).json({
                     errors: {
@@ -71,7 +71,7 @@ class AuthController implements IControllerBase {
             })(req, res, next);
         })
 
-        this.router.get("/auth/current", auth.required, (req: any, res: Response, next: NextFunction) => {
+        this.router.get(process.env.PATH_PREFIX + "/auth/current", auth.required, (req: any, res: Response, next: NextFunction) => {
             const { payload: { id } } = req;
 
             return User.findByPk(id)

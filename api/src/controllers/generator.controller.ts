@@ -22,7 +22,7 @@ class GeneratorController implements IControllerBase {
     }
 
     public initRoutes() {
-        this.router.post('/generate/:period/:userId', auth.required, upload.none(), this.post)
+        this.router.post(process.env.PATH_PREFIX + '/generate/:period/:userId', auth.required, upload.none(), this.post)
     }
 
     post = (req: Request, res: Response, next: NextFunction) => {

@@ -12,6 +12,7 @@ module.exports = {
     env: {
       NODE_ENV: 'development',
       PORT: 5000,
+      PATH_PREFIX: "",
       OFFICE_DATA_PATH: "/Users/ngrebenshikov/repositories/my/office/data",
       OFFICE_TOOLS_PATH: "/Users/ngrebenshikov/repositories/my/office/tools",
       OFFICE_JWT_SECRET: "office-sercret",
@@ -20,6 +21,7 @@ module.exports = {
     env_production: {
       NODE_ENV: 'production',
       PORT: 8080,
+      PATH_PREFIX: "/api",
       OFFICE_DATA_PATH: "/var/www/office/data",
       OFFICE_TOOLS_PATH: "/var/www/office/tools",
       OFFICE_JWT_SECRET: "office-sercret",

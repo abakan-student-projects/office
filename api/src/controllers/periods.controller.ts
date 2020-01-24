@@ -6,7 +6,7 @@ import auth from "../middleware/auth";
 
 
 class PeriodsController implements IControllerBase {
-    public path = '/periods'
+    public path = process.env.PATH_PREFIX + '/periods'
     public router = express.Router()
 
     constructor() {
